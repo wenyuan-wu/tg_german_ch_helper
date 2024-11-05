@@ -21,7 +21,7 @@ def run_tg_bot(bot_token):
     @bot.message_handler(func=lambda message: True)
     def echo_all(message):
         reply = get_response_openai(message.text)
-        bot.reply_to(message, reply)
+        bot.reply_to(message, reply, parse_mode="Markdown")
 
     bot.infinity_polling()
 

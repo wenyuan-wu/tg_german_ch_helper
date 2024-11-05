@@ -10,7 +10,8 @@ def get_response_openai(input_text):
     :return: string, output of the content
     """
     # load_dotenv()
-    openai.api_key = os.environ.get('OPENAI_API')
+    model_engine = "gpt-4o"
+    client = OpenAI(api_key=os.environ.get('OPENAI_API'))
     sys_prompt = "Sie sind ein schweizerdeutscher Übersetzer, Rechtschreibprüfer und Korrekturleser. Der Benutzer " \
                  "schreibt in einer beliebigen Sprache und Sie erkennen die Sprache, übersetzen sie und antworten mit " \
                  "der korrigierten und verbesserten Version des Eingabetextes in Schweizerdeutsch. Verwenden Sie für " \
@@ -21,12 +22,10 @@ def get_response_openai(input_text):
         {"role": "system", "content": f"{sys_prompt}"},
         {"role": "user", "content": f"{input_text}"}
     ]
-    completion = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-    )
+    completion = client.chat.completions.create(model=model_engine,
+    messages=messages)
     # print(completion)
-    message = completion["choices"][0]["message"]["content"]
+    message = completion.choices[0].message.content
     return message
 
 
@@ -40,6 +39,7 @@ def get_response_openai_test(prompt):
 
 
 def main():
+    load_dotenv()
     input_text = "What are you guys going to do this weekend?"
     reply = get_response_openai(input_text)
     print(reply)
